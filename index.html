@@ -39,61 +39,80 @@
         conveniently located brewery easier. Drink Up helps provide you with a
         list of breweries within your designated location. Wether you are
         planning for a trip or you would like to get a solid beer after work.</p>
-      <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-            Distance
-          </button>
-          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="#">5</a>
-            <a class="dropdown-item" href="#">10</a>
-            <a class="dropdown-item" href="#">15</a>
-            <a class="dropdown-item" href="#">20</a>
-            <a class="dropdown-item" href="#">25</a>
-            <a class="dropdown-item" href="#">30</a>
-            <a class="dropdown-item" href="#">50</a>
-            <a class="dropdown-item" href="#">100</a>
-          </div>
-        </div>
-      </div>
-      <input type="text" placeholder="Where are you going?" id="whereToGo">
-      <button class="btn btn-primary searchBtn">Find me some beer!</button>
+
     </div>
   </div>
+    <input type="text" placeholder="What city are you going to?" id="whereToGo">
+    <input type="text" placeholder="What state?" id="state">
+  <button class="btn btn-primary searchBtn">Find me some beer!</button>
+  <container>
+    <div class="results">
+      <ul id="cityResults">
+
+      </ul>
+    </div>
+  </container>
+
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
 
     var apiKey = "OSrmA0Qq02J7YWH0uJPwkPbEcYixkr8y";
-    //var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + apiKey + "&location=1555%20Blake%20St,%20Denver,%20CO%2080202&thumbMaps=false";
-
-;
     var lat = "";
     var long = "";
-    //console.log(latLongSearch);
+    
 
     $(".searchBtn").on("click", function () {
       // window.location.replace("search-page.html");
       //Stores input text
       var location = $("#whereToGo").val().trim();
+      var state = $("#state").val().trim();
       console.log(location);
       var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + apiKey + "&maxResults=1&location=" + location;
-      // var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + apiKey + "&maxMatches=1&location=%20" + location + ",&thumbMaps=false";
-      var locationQuery = "http://www.mapquestapi.com/search/v2/radius?key=" + apiKey + "&maxMatches=4&origin=" + lat + "," + long;
-      // apiKey + ', '  + location;
+
       console.log(latLongSearch);
       $.ajax({
         url: latLongSearch,
         method: "GET"
       }).then(function (response) {
-        //Retrieves location
-        //lat = response.locations.displayLatLng.lat
-        //long = response.locations.displayLatLng.lng
+        //Retrieves latitude and longitude for radius request
+        lat = response.results[0].locations[0].latLng.lat;
+        long = response.results[0].locations[0].latLng.lng;
+        var locationQuery = "http://www.mapquestapi.com/search/v2/radius?key=" + apiKey + "&maxMatches=4&origin=" + lat + "," + long;
+        var locationQuery = "https://api.openbrewerydb.org/breweries?by_city=" + location + "&by_state=" + state;
+        $.ajax({
+          url: locationQuery,
+          method: "GET"
+        }).then(function (response) {
+          // retrieves location
+
+          for(var i = 0; i < response.length; i++){
+            var name = response[i].name;
+            var address = response[i].street + ", " + response[i].city + ", " + response[i].state;
+            // clearing out any blank street addresses.
+            if (response[i].street === ""){
+
+            } else{
+            //posting to the DOM the breweries!
+              var listEl = $("<li>");
+                var saveBtn = $("<button>");
+                $(listEl).text(name + ": " + address + "  ");
+                $(saveBtn).text("Save");
+                $(saveBtn).attr("class", "rightAdjust");
+                $("#cityResults").append(listEl);
+                $(listEl).append(saveBtn);
+              }
+          
+          }
+          console.log(response);
+        })
         console.log(response);
         console.log(lat);
         console.log(long);
       });
     });
+
+
 
   </script>
 
