@@ -42,8 +42,8 @@
 
     </div>
   </div>
-    <input type="text" placeholder="What city are you going to?" id="whereToGo">
-    <input type="text" placeholder="What state?" id="state">
+  <input type="text" placeholder="What city are you going to?" id="whereToGo">
+  <input type="text" placeholder="What state?" id="state">
   <button class="btn btn-primary searchBtn">Find me some beer!</button>
   <container>
     <div class="results">
@@ -51,7 +51,17 @@
 
       </ul>
     </div>
+    <div class="savedResults" id="savedResults">
+        <ul>
+
+        </ul>
+    </div>
+    <div class="mapLocation" id="mapLocation">
+      
+    </div>
   </container>
+
+
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -60,17 +70,26 @@
     var apiKey = "OSrmA0Qq02J7YWH0uJPwkPbEcYixkr8y";
     var lat = "";
     var long = "";
-    
+    var thisAddress = "";
+    var beerAddress = [];
 
+    
     $(".searchBtn").on("click", function () {
+      $("#cityResults").empty();
+      beerAddress = []; 
       // window.location.replace("search-page.html");
       //Stores input text
       var location = $("#whereToGo").val().trim();
       var state = $("#state").val().trim();
-      console.log(location);
+     
+      //https://www.mapquestapi.com/staticmap/v5/map?key=KEY&center=San+Francisco,CA&zoom=10&type=hyb&size=600,400@2x
       var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + apiKey + "&maxResults=1&location=" + location;
 
-      console.log(latLongSearch);
+      // $.ajax({
+      //     url: mapQuery,
+      //     method: "GET"
+      //   }
+      
       $.ajax({
         url: latLongSearch,
         method: "GET"
@@ -84,34 +103,54 @@
           url: locationQuery,
           method: "GET"
         }).then(function (response) {
+         
           // retrieves location
 
-          for(var i = 0; i < response.length; i++){
+          for (var i = 0; i < response.length; i++) {
             var name = response[i].name;
             var address = response[i].street + ", " + response[i].city + ", " + response[i].state;
             // clearing out any blank street addresses.
-            if (response[i].street === ""){
-
-            } else{
-            //posting to the DOM the breweries!
+            if (response[i].street === "") {
+              beerAddress.push("");
+            } else {
+              //posting to the DOM the breweries!
+              beerAddress.push(name + ": " + address + " ");
               var listEl = $("<li>");
-                var saveBtn = $("<button>");
-                $(listEl).text(name + ": " + address + "  ");
-                $(saveBtn).text("Save");
-                $(saveBtn).attr("class", "rightAdjust");
-                $("#cityResults").append(listEl);
-                $(listEl).append(saveBtn);
-              }
-          
+              var saveBtn = $("<button>");
+              $(listEl).text(name + ": " + address + " ").data("buttonValue", [i]);
+              $(saveBtn).text("Save");
+              $(this).val("Save");
+              $(saveBtn).addClass("saveClass").attr("data-save", [i]);
+              $("#cityResults").append(listEl);
+              $(listEl).append(saveBtn);
+              
+            }
+
           }
           console.log(response);
+
         })
         console.log(response);
         console.log(lat);
         console.log(long);
       });
     });
+    // $(".rightAdjust").on("click", function () {
+    //   thisAddress = $(this).text();
+    //   console.log(thisAddress);
+    
+    $("#cityResults").on("click", ".saveClass", function () {
+                var savedEl = $("<li>");
 
+                thisAddress = beerAddress[$(this).attr("data-save")];
+                localStorage.setItem("address", JSON.stringify(thisAddress));
+                savedEl.text(JSON.parse(localStorage.getItem("address")));
+                $(savedEl).appendTo("#savedResults");
+
+                
+    });
+    
+    
 
 
   </script>
