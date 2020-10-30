@@ -39,8 +39,6 @@
       <ul id="savedResults">
 
       </ul>
-      <button class="generateMap">Generate Map</button>
-      <button class="newSearch">New Search</button>
       <button class="clearSaved">Clear Saved</button>
     </div>
     <div id="map" style="width: 100%; height: 530px;">
@@ -56,26 +54,28 @@
 
     $(document).ready(function () {
 
+      init();
+
       var mapQuestApiKey = "OSrmA0Qq02J7YWH0uJPwkPbEcYixkr8y";
       var lat = "";
       var long = "";
       var thisAddress = "";
       var beerAddress = [];
       var storedBreweries = [];
+      
       var searchAddresses = [];
       var breweryNames = [];
       var breweryLat = [];
       var breweryLong = [];
 
-      init();
-
+      console.log(localStorage);
       function init() {
-        storedBreweries = JSON.parse(localStorage.getItem("address")) || [];
-        console.log(storedBreweries);
-        // localStorage.setItem("address", JSON.stringify(storedBreweries));
-        for (i = 0; i < storedBreweries.length; i++) {
+        savedBreweries = JSON.parse(localStorage.getItem("address")) || [];
+        console.log(savedBreweries);
+        localStorage.setItem("address", JSON.stringify(savedBreweries));
+        for (i = 0; i < savedBreweries.length; i++) {
           var savedEl = $("<li>");
-          savedEl.text(storedBreweries[i]);
+          savedEl.text(savedBreweries[i]);
           $("#savedResults").append(savedEl);
         }
       }
@@ -87,6 +87,7 @@
         //Stores input text
         var city = $("#whereToGo").val().trim();
         var state = $("#state").val().trim();
+        var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
 
         var locationQuery = "https://api.openbrewerydb.org/breweries?by_city=" + city + "&by_state=" + state;
         $.ajax({
@@ -120,39 +121,7 @@
 
             }
           }
-        })
-      });
-
-      //Problem here.
-      //Save Button onclick event
-      var savedBreweries = [];
-      $("#cityResults").on("click", ".saveClass", function () {
-        var savedEl = $("<li>");
-        //Doesn't keep saved results on refresh.
-        thisAddress = beerAddress[$(this).attr("data-save")];
-        savedBreweries.push(thisAddress);
-        localStorage.setItem("address", JSON.stringify(savedBreweries));
-        $(savedEl).text(thisAddress);
-        $(savedEl).appendTo("#savedResults");
-        console.log(savedBreweries);
-      });
-
-      //Old Stored doesn't show on refresh.
-      // function init() {
-      //   storedBreweries = JSON.parse(localStorage.getItem("address"))
-      //   localStorage.setItem("address", JSON.stringify(storedBreweries));
-      //   for (i = 0; i < storedBreweries.length; i++) {
-      //     var savedEl = $("<li>");
-      //     savedEl.text(storedBreweries[i]);
-      //     $("#savedResults").append(savedEl);
-      //   }
-      //   // };
-      // }
-
-      $(".saved").on("click", ".generateMap", function () {
-        var city = $("#whereToGo").val().trim();
-        var state = $("#state").val().trim();
-        var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+        });
 
         $.ajax({
           url: latLongSearch,
@@ -182,29 +151,88 @@
               }).addTo(map);
             }
           }
-
-          // for (i = 0; i < searchAddresses.length; i++) {
-          //   L.mapquest.geocoding().geocode(
-          //     [
-          //       searchAddresses[i]
-          //     ],
-          //     createBasicGeocodingLayer
-          //   );
-          // }
-          // function createBasicGeocodingLayer(err, response) {
-          //   map.addLayer(L.mapquest.geocodingLayer({
-          //     geocodingResponse: response
-          //   }));
-
-          // }
         });
-
-        $(".clearSaved").on("click", function () {
-          localStorage.clear();
-          $("#savedResults").empty();
-        });
-
       });
+
+      //Problem here.
+      //Save Button onclick event
+      $("#cityResults").on("click", ".saveClass", function () {
+        var savedEl = $("<li>");
+        //Doesn't keep saved results on refresh.
+        thisAddress = beerAddress[$(this).attr("data-save")];
+        savedBreweries.push(thisAddress);
+        localStorage.setItem("address", JSON.stringify(savedBreweries));
+        $(savedEl).text(thisAddress);
+        $(savedEl).appendTo("#savedResults");
+        console.log(savedBreweries);
+      });
+
+      // Old Stored doesn't show on refresh.
+      // function init() {
+      //   storedBreweries = JSON.parse(localStorage.getItem("address"))
+      //   localStorage.setItem("address", JSON.stringify(storedBreweries));
+      //   for (i = 0; i < storedBreweries.length; i++) {
+      //     var savedEl = $("<li>");
+      //     savedEl.text(storedBreweries[i]);
+      //     $("#savedResults").append(savedEl);
+      //   }
+      // }
+
+      // $(".saved").on("click", ".generateMap", function () {
+      //   var city = $("#whereToGo").val().trim();
+      //   var state = $("#state").val().trim();
+      //   var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+
+      //   $.ajax({
+      //     url: latLongSearch,
+      //     method: "GET"
+      //   }).then(function (response) {
+      //     lat = response.results[0].locations[0].latLng.lat;
+      //     long = response.results[0].locations[0].latLng.lng;
+
+      //     L.mapquest.key = mapQuestApiKey;
+      //     var map = L.mapquest.map('map', {
+      //       center: [lat, long],
+      //       layers: L.mapquest.tileLayer('map'),
+      //       zoom: 12
+      //     });
+
+      //     for (i = 0; i < searchAddresses.length; i++) {
+      //       if (searchAddresses[i] !== null && breweryLat[i] !== null && breweryLong[i] !== null) {
+      //         L.mapquest.textMarker([breweryLat[i], breweryLong[i]], {
+      //           text: breweryNames[i],
+      //           position: 'right',
+      //           type: 'marker',
+      //           icon: {
+      //             primaryColor: '#333333',
+      //             secondaryColor: '#333333',
+      //             size: 'sm'
+      //           }
+      //         }).addTo(map);
+      //       }
+      //     }
+
+      // for (i = 0; i < searchAddresses.length; i++) {
+      //   L.mapquest.geocoding().geocode(
+      //     [
+      //       searchAddresses[i]
+      //     ],
+      //     createBasicGeocodingLayer
+      //   );
+      // }
+      // function createBasicGeocodingLayer(err, response) {
+      //   map.addLayer(L.mapquest.geocodingLayer({
+      //     geocodingResponse: response
+      //   }));
+
+      // }
+      // });
+
+      $(".clearSaved").on("click", function () {
+        localStorage.clear();
+        $("#savedResults").empty();
+      });
+
     });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
