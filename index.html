@@ -63,13 +63,27 @@
       var beerAddress = [];
       var storedBreweries = [];
       var searchAddresses = [];
+      var breweryNames = [];
+      var breweryLat = [];
+      var breweryLong = [];
 
       init();
+
+      function init() {
+        storedBreweries = JSON.parse(localStorage.getItem("address")) || [];
+        console.log(storedBreweries);
+        // localStorage.setItem("address", JSON.stringify(storedBreweries));
+        for (i = 0; i < storedBreweries.length; i++) {
+          var savedEl = $("<li>");
+          savedEl.text(storedBreweries[i]);
+          $("#savedResults").append(savedEl);
+        }
+      }
 
       $(".searchBtn").on("click", function () {
         $("#cityResults").empty();
         beerAddress = [];
-        // window.location.replace("search-page.html");
+
         //Stores input text
         var city = $("#whereToGo").val().trim();
         var state = $("#state").val().trim();
@@ -86,6 +100,9 @@
             var name = response[i].name;
             var address = response[i].street + ", " + response[i].city + ", " + response[i].state;
             searchAddresses.push(address);
+            breweryNames.push(name);
+            breweryLat.push(response[i].latitude);
+            breweryLong.push(response[i].longitude);
 
             if (response[i].street === "") {
               beerAddress.push("");
@@ -121,16 +138,16 @@
       });
 
       //Old Stored doesn't show on refresh.
-      function init() {
-        storedBreweries = JSON.parse(localStorage.getItem("address"))
-        localStorage.setItem("address", JSON.stringify(storedBreweries));
-        for (i = 0; i < storedBreweries.length; i++) {
-          var savedEl = $("<li>");
-          savedEl.text(storedBreweries[i]);
-          $("#savedResults").append(savedEl);
-        }
-        // };
-      }
+      // function init() {
+      //   storedBreweries = JSON.parse(localStorage.getItem("address"))
+      //   localStorage.setItem("address", JSON.stringify(storedBreweries));
+      //   for (i = 0; i < storedBreweries.length; i++) {
+      //     var savedEl = $("<li>");
+      //     savedEl.text(storedBreweries[i]);
+      //     $("#savedResults").append(savedEl);
+      //   }
+      //   // };
+      // }
 
       $(".saved").on("click", ".generateMap", function () {
         var city = $("#whereToGo").val().trim();
@@ -152,32 +169,43 @@
           });
 
           for (i = 0; i < searchAddresses.length; i++) {
-            L.mapquest.geocoding().geocode(
-              [
-                searchAddresses[i]
-              ],
-              createBasicGeocodingLayer
-            );
+            if (searchAddresses[i] !== null && breweryLat[i] !== null && breweryLong[i] !== null) {
+              L.mapquest.textMarker([breweryLat[i], breweryLong[i]], {
+                text: breweryNames[i],
+                position: 'right',
+                type: 'marker',
+                icon: {
+                  primaryColor: '#333333',
+                  secondaryColor: '#333333',
+                  size: 'sm'
+                }
+              }).addTo(map);
+            }
           }
-          function createBasicGeocodingLayer(err, response) {
-            map.addLayer(L.mapquest.geocodingLayer({
-              geocodingResponse: response
-            }));
 
-          }
-          console.log(storedBreweries[0]);
+          // for (i = 0; i < searchAddresses.length; i++) {
+          //   L.mapquest.geocoding().geocode(
+          //     [
+          //       searchAddresses[i]
+          //     ],
+          //     createBasicGeocodingLayer
+          //   );
+          // }
+          // function createBasicGeocodingLayer(err, response) {
+          //   map.addLayer(L.mapquest.geocodingLayer({
+          //     geocodingResponse: response
+          //   }));
+
+          // }
         });
 
         $(".clearSaved").on("click", function () {
           localStorage.clear();
           $("#savedResults").empty();
         });
+
       });
     });
-
-
-
-
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
