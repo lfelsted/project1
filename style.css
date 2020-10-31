@@ -1,8 +1,35 @@
-/* body {
+.body {
     background-image: url("https://www.shamrockgift.com/blog/wp-content/uploads/2019/03/irish-pub-v2-2x1-1080x540.jpeg");
     background-color: #cccccc;
-   } */
+   } 
+
+   ul {
+    list-style-type: none;
+   }
+   li {
+    margin: 10px;
+   }
+   
 
 .card-title {
-    font-size: 75px;   
+    font-size: large; 
+    margin: 15px;  
+    text-align: center;
 } 
+
+.card-center {
+    text-align: center;
+}
+
+.card-header {
+    font-size: 75px;
+    text-align: center;
+}
+.clear-saved {
+    float: left;
+    margin: 20px;
+}
+.save-class {
+    float: right;
+}
+
