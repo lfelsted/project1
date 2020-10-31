@@ -1,0 +1,21 @@
+// function createBasicGeocodingLayer(err, response) {
+    //   map.addLayer(L.mapquest.geocodingLayer({
+    //     geocodingResponse: response
+    //   }));
+
+    // }
+
+    //     for (i = 0; i < searchAddresses.length; i++) {
+        //       if (searchAddresses[i] !== null && breweryLat[i] !== null && breweryLong[i] !== null) {
+        //         L.mapquest.textMarker([breweryLat[i], breweryLong[i]], {
+        //           text: breweryNames[i],
+        //           position: 'right',
+        //           type: 'marker',
+        //           icon: {
+        //             primaryColor: '#333333',
+        //             secondaryColor: '#333333',
+        //             size: 'sm'
+        //           }
+        //         }).addTo(map);
+        //       }
+        //     }

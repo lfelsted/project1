@@ -87,7 +87,9 @@
         //Stores input text
         var city = $("#whereToGo").val().trim();
         var state = $("#state").val().trim();
+
         var latLongSearch = "https://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+
 
         var locationQuery = "https://api.openbrewerydb.org/breweries?by_city=" + city + "&by_state=" + state;
         $.ajax({
@@ -167,6 +169,7 @@
         console.log(savedBreweries);
       });
 
+
       // Old Stored doesn't show on refresh.
       // function init() {
       //   storedBreweries = JSON.parse(localStorage.getItem("address"))
@@ -227,6 +230,7 @@
 
       // }
       // });
+
 
       $(".clearSaved").on("click", function () {
         localStorage.clear();
