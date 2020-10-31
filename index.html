@@ -87,7 +87,9 @@
         //Stores input text
         var city = $("#whereToGo").val().trim();
         var state = $("#state").val().trim();
-        var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+
+        var latLongSearch = "https://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+
 
         var locationQuery = "https://api.openbrewerydb.org/breweries?by_city=" + city + "&by_state=" + state;
         $.ajax({
@@ -166,6 +168,69 @@
         $(savedEl).appendTo("#savedResults");
         console.log(savedBreweries);
       });
+
+
+      // Old Stored doesn't show on refresh.
+      // function init() {
+      //   storedBreweries = JSON.parse(localStorage.getItem("address"))
+      //   localStorage.setItem("address", JSON.stringify(storedBreweries));
+      //   for (i = 0; i < storedBreweries.length; i++) {
+      //     var savedEl = $("<li>");
+      //     savedEl.text(storedBreweries[i]);
+      //     $("#savedResults").append(savedEl);
+      //   }
+      // }
+
+      // $(".saved").on("click", ".generateMap", function () {
+      //   var city = $("#whereToGo").val().trim();
+      //   var state = $("#state").val().trim();
+      //   var latLongSearch = "http://www.mapquestapi.com/geocoding/v1/address?key=" + mapQuestApiKey + "&maxResults=1&location=" + city + "," + state;
+
+      //   $.ajax({
+      //     url: latLongSearch,
+      //     method: "GET"
+      //   }).then(function (response) {
+      //     lat = response.results[0].locations[0].latLng.lat;
+      //     long = response.results[0].locations[0].latLng.lng;
+
+      //     L.mapquest.key = mapQuestApiKey;
+      //     var map = L.mapquest.map('map', {
+      //       center: [lat, long],
+      //       layers: L.mapquest.tileLayer('map'),
+      //       zoom: 12
+      //     });
+
+      //     for (i = 0; i < searchAddresses.length; i++) {
+      //       if (searchAddresses[i] !== null && breweryLat[i] !== null && breweryLong[i] !== null) {
+      //         L.mapquest.textMarker([breweryLat[i], breweryLong[i]], {
+      //           text: breweryNames[i],
+      //           position: 'right',
+      //           type: 'marker',
+      //           icon: {
+      //             primaryColor: '#333333',
+      //             secondaryColor: '#333333',
+      //             size: 'sm'
+      //           }
+      //         }).addTo(map);
+      //       }
+      //     }
+
+      // for (i = 0; i < searchAddresses.length; i++) {
+      //   L.mapquest.geocoding().geocode(
+      //     [
+      //       searchAddresses[i]
+      //     ],
+      //     createBasicGeocodingLayer
+      //   );
+      // }
+      // function createBasicGeocodingLayer(err, response) {
+      //   map.addLayer(L.mapquest.geocodingLayer({
+      //     geocodingResponse: response
+      //   }));
+
+      // }
+      // });
+
 
       $(".clearSaved").on("click", function () {
         localStorage.clear();
