@@ -1,22 +1,23 @@
-Title "Drink Up' top and centered. Use a header
+<h1>Group Project 1:<h1>
 
-Under header, give description of what the website is how it works, and what it accomplishes. 
+For the first group project, we were tasked with creating an application that applied what we have learnend so far in class.  The requirements included using a CSS framework (originally Bootstrap was not allowed, but we were told it was alright to use it), two APIs and use of local storage with persistent data.  Our original idea, like most groups from the sounds of it, was pretty ambitious.  We wanted to create an application that could locate wineries, distilleries, and breweries based on search criteria (pick your area and poison) and provide a map that populated saved options in real time as well as an option for directions to said location.  We quickly realized after researching APIs that this was a tall task and decided to scale it back to just breweries (for now) and used the OpenBreweryDB API.  The OpenBreweryDB was pretty easy to maneuver and gather data and one of the easiest wins for us was to get the list of breweries to populate based on a city search.  Save buttons were appended next to the populated list items which added the breweries to local storage and populated them on the screen in another list in real time.  A function was created to retrieve those items from local storage so the list persisted through refreshing the page and a clear saved button was created to clear out local storage.
 
-Background of stock brewery image. 
+We also wanted to integrate the Google Maps API but were told that it was fairly complicated so we switched gears and went with the MapQuest API.  The MapQuest API proved to be challenging in its own ways.  Options were fairly limited on what you were able to do and integrating it with the OpenBreweryDB API was easier said than done and the directions on the site were not very helpful.  It took many frustrating hours and failed attempts to just get the map to populate, and with some serious help from one of our TAs Andrew who stayed well past office hours to help us (shout out to Andrew, you're the man!), we finally got a map to populate.  Turns out, the MapQuest JavaScript library was needed, which again left much to the imagination in terms of instructions.  Next step was to get the map to populate in the searched city.  
 
-Box in the middle to enter criteria for search, and button to submit which will redirect to new page that has information for breweries based off of entered criteria.
+Latitude and longitude parameters were needed, and after scrapping an API call that gathered those points from our initial attempts by traversing the API response, we brought it back from the dead.  Lat and long variables were created to dynamically update those parameters in the map variable.  The good news: the variables updated dynamically.  The bad news: the map only populated once.  And of course, the MapQuest API site was no help to try and fix that.  So we pivoted.  Initially we were going to have the map populate with an onclick event in the saved breweries section, but it made more sense to have it populate upon searching a city so that the user could see their options and in theory save options based on where they were or wanted to go.  We then found an option to add points to the map with the ability to add labels, descriptions, etc.  Having the framework already built that gathered address information for the brewery search, we used those location variables to plug into this new feature and wrapped it in a for loop to cycle through all the addresses populated and add the points to the map.  Great success!
 
-Criteria options - location, distance from said location. **Bonus options, types of beers, reviews, price range, dog friendly, outside seating, any additional information we think of. 
+Bootstrap and CSS were used in combination to style the site, though it kind of took a back seat in the project as we were fighting with the MapQuest API trying to get the website functional.  Instead of dividing and conquering on the front-end/back-end, we decided as a group to collaborate and tackle all aspects together as we all wanted to get more experience and practice diving into all aspects of what we have learned so far.  It was a rollercoaster of a couple weeks.  We laughed, we cried, there might have been some profanity, but in the end we were all pretty stoked on what we accomplished together.  Check out our project <a href="https://lfelsted.github.io/project1/ ">here</a>.
 
-**Spinwheel of popular choices based off of criteria. 
+Here's a little sneak peak into the project...
 
-saving specific breweries that you would like to visit again or get to next time. 
+The home page:
+<img width="1431" alt="Screen Shot 2020-10-31 at 9 30 41 PM" src="https://user-images.githubusercontent.com/68754392/97794553-55612500-1bc1-11eb-9bfe-a132b490bdbc.png">
 
-Revisit options at the bottow of page using local storage?
+The populated list upon searching a city:
+<img width="1426" alt="Screen Shot 2020-10-31 at 9 35 34 PM" src="https://user-images.githubusercontent.com/68754392/97794559-60b45080-1bc1-11eb-8ee2-0ea3491f716a.png">
 
-Second page has our header as well as a list of breweries based off of proximity. 
+Saved list and populated map:
+<img width="1429" alt="Screen Shot 2020-10-31 at 9 36 17 PM" src="https://user-images.githubusercontent.com/68754392/97794564-66aa3180-1bc1-11eb-8086-ff35577093f8.png">
 
-If revisit option is selected, it pulls up a page with information from that specific search?
-
-Third page, (revisit page) will load results from that specified search
-
+And finally, the list persists!
+<img width="1426" alt="Screen Shot 2020-10-31 at 9 36 52 PM" src="https://user-images.githubusercontent.com/68754392/97794568-6dd13f80-1bc1-11eb-9909-00dd6ab6316d.png">
